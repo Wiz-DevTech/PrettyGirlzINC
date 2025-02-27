@@ -1,0 +1,61 @@
+name: Gitnub Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  node-build:
+    name: Node.js Build and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['18']
+    name: Node ${{ matrix.node }}
+
+ # env:
+    #   php-ini-values: post_max_size=256M
+    #   wp-bp-directory: src/wp-content/plugins/buddypress
+    #   DB_DATABASE: db_test
+    #   DB_USER: root
+    #   DB_PASSWORD: 'root'
+    #   DB_HOST: localhost
+
+    steps:
+      # - run: |
+      #     sudo /etc/init.d/mysql start
+      #     mysql -e 'CREATE DATABASE db_test;' -uroot -proot
+      #     mysql -e 'SHOW DATABASES;' -uroot -proot
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install -g npm@9
+      - run: npm install
+      - run: npm run test
+
+  sonarqube-analysis:
+    name: SonarQube Analysis
+    runs-on: windows-latest
+    if: github.ref == 'refs/heads/dev'  # Only run on pushes to the dev branch
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full clone for better SonarQube analysis
+
+      - uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Optional: Fail the job if the SonarQube Quality Gate is not met
+      # - uses: SonarSource/sonarqube-quality-gate-action@v1
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
