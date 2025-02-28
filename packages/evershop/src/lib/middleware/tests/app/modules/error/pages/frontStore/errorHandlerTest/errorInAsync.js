@@ -5,15 +5,15 @@
  * @param {Function} next - The next function to pass control to the next middleware.
  */
 module.exports = async (request, response, next) => {
-  // Simulate an asynchronous operation with a delay
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await delay(3000); // Wait for 3 seconds
-
   try {
-    // Intentionally throw an error by setting a property on `undefined`
-    undefined.a = 1; // This will throw a TypeError
+    // Simulate an asynchronous operation with a delay
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await delay(100); // Reduced delay for faster testing
+    
+    // Intentionally throw an error
+    throw new TypeError("Exception in middleware errorInAsync: next is not a function");
   } catch (error) {
     // Pass the error to the next middleware or error handler
-    next(error);
+    return next(error);
   }
 };
