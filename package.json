@@ -21,6 +21,7 @@
     "setup": "evershop install",
     "build": "evershop build",
     "start": "evershop start",
+     "sonar": "sonar-scanner",
     "user:create": "evershop user:create",
     "user:changePassword": "evershop user:changePassword",
     "start:debug": "evershop start --debug",
@@ -29,7 +30,7 @@
     "lint": "eslint --fix --ext .js,.jsx .",
     "prepare": "husky install"
   },
-  "author": "The Nguyen (https://evershop.io)",
+  "author": "WizDev-Tech (https://WizDevTech.com)",
   "license": "GNU GENERAL PUBLIC LICENSE 3.0",
   "devDependencies": {
     "@babel/cli": "^7.15.7",
