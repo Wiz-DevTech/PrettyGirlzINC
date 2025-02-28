@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node: ['18']
-    name: Node ${{ matrix.node }}
+  
 
  # env:
     #   php-ini-values: post_max_size=256M
@@ -29,7 +29,7 @@ jobs:
       #     mysql -e 'CREATE DATABASE db_test;' -uroot -proot
       #     mysql -e 'SHOW DATABASES;' -uroot -proot
 
-    steps:
+
       - uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
