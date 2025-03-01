@@ -2,7 +2,8 @@ const jest = require('jest-mock');
 
 /**
  * Error-throwing middleware without using next parameter.
- * This will throw an error that should be caught by the error handler.
+ * This implementation throws an error that should be caught by the asyncMiddlewareWrapper.
+ * The error will be thrown directly from the middleware function without try/catch.
  * 
  * @param {Object} request - The request object
  * @param {Object} response - The response object
@@ -10,9 +11,14 @@ const jest = require('jest-mock');
  */
 module.exports = jest.fn(async (request, response, delegates) => {
   // Add a small delay to simulate async work
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await delay(100); // Use a shorter delay for faster tests
+  await new Promise((resolve) => setTimeout(resolve, 100));
   
-  // Throw a more specific error that's easier to identify
-  throw new TypeError("Test error in async middleware without next");
+  // Create an object to use for throwing the error, instead of using undefined
+  // This avoids the specific "Cannot set properties of undefined" error
+  // which might be causing issues with the test framework
+  const obj = null;
+  obj.someProperty = "This will throw a TypeError";
+  
+  // The code below will never execute because the line above will throw
+  return {};
 });
