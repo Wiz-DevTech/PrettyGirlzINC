@@ -1,19 +1,13 @@
-Fixed errorInAsync.js
+const jest = require('jest-mock');
 
-/**
- * Middleware that simulates an asynchronous operation and throws an error.
- * This middleware doesn't use the next function directly but allows the error
- * to be caught by the asyncMiddlewareWrapper.
- * 
- * @param {Object} request - The request object.
- * @param {Object} response - The response object.
- * @param {Object} delegates - The delegates object.
- */
-module.exports = async (request, response, delegates) => {
+module.exports = jest.fn(async (request, response, delegates) => {
   // Simulate an asynchronous operation with a delay
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await delay(100); // Reduced delay for faster testing
+  await delay(3000);
   
-  // Intentionally throw an error - this will be caught by asyncMiddlewareWrapper
-  throw new TypeError("Exception in middleware errorInAsync: next is not a function");
-};
+  // This will cause an error when executed
+  undefined.a = 1;
+  
+  // No need for try/catch or next() since the asyncMiddlewareWrapper
+  // will catch the error and handle it
+});
